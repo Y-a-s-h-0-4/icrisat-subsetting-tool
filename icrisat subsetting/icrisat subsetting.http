@@ -1,0 +1,6 @@
+@icrisat_subsetting_HostAddress = http://localhost:5148
+
+GET {{icrisat_subsetting_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
