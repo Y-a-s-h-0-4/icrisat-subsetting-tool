@@ -1,10 +1,307 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Weather Data Range Input";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container">
+    <h1>Weather Data Range Input</h1>
+
+    <div class="weather-form">
+        <!-- Temperature Range -->
+        <div class="range_container">
+            <label>Temperature Range (°C)</label>
+            <div class="sliders_control">
+                <input id="tempFromSlider" type="range" value="0" min="-50" max="50" />
+                <input id="tempToSlider" type="range" value="30" min="-50" max="50" />
+            </div>
+            <div class="form_control">
+                <div class="form_control_container">
+                    <div class="form_control_container__time">Min</div>
+                    <input class="form_control_container__time__input" type="number" id="tempFromInput" value="0" min="-50" max="50" />
+                </div>
+                <div class="form_control_container">
+                    <div class="form_control_container__time">Max</div>
+                    <input class="form_control_container__time__input" type="number" id="tempToInput" value="30" min="-50" max="50" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Rainfall Range -->
+        <div class="range_container">
+            <label>Rainfall Range (mm)</label>
+            <div class="sliders_control">
+                <input id="rainFromSlider" type="range" value="0" min="0" max="200" />
+                <input id="rainToSlider" type="range" value="50" min="0" max="200" />
+            </div>
+            <div class="form_control">
+                <div class="form_control_container">
+                    <div class="form_control_container__time">Min</div>
+                    <input class="form_control_container__time__input" type="number" id="rainFromInput" value="0" min="0" max="200" />
+                </div>
+                <div class="form_control_container">
+                    <div class="form_control_container__time">Max</div>
+                    <input class="form_control_container__time__input" type="number" id="rainToInput" value="50" min="0" max="200" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Pressure Range (in kPa) -->
+        <div class="range_container">
+            <label>Pressure Range (kPa)</label>
+            <div class="sliders_control">
+                <input id="pressFromSlider" type="range" value="96.6" min="90" max="110" />
+                <input id="pressToSlider" type="range" value="111" min="90" max="110" />
+            </div>
+            <div class="form_control">
+                <div class="form_control_container">
+                    <div class="form_control_container__time">Min</div>
+                    <input class="form_control_container__time__input" type="number" id="pressFromInput" value="96.6" min="90" max="110" step="0.1" />
+                </div>
+                <div class="form_control_container">
+                    <div class="form_control_container__time">Max</div>
+                    <input class="form_control_container__time__input" type="number" id="pressToInput" value="111" min="90" max="110" step="0.1" />
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<style>
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .weather-form {
+        margin-top: 20px;
+    }
+
+    .range_container {
+        display: flex;
+        flex-direction: column;
+        width: 80%;
+        margin: 40px auto;
+    }
+
+    .sliders_control {
+        position: relative;
+        min-height: 50px;
+    }
+
+    .form_control {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        font-size: 24px;
+        color: #635a5a;
+    }
+
+    label {
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        pointer-events: all;
+        width: 24px;
+        height: 24px;
+        background-color: #fff;
+        border-radius: 50%;
+        box-shadow: 0 0 0 1px #C6C6C6;
+        cursor: pointer;
+    }
+
+    input[type=range]::-moz-range-thumb {
+        -webkit-appearance: none;
+        pointer-events: all;
+        width: 24px;
+        height: 24px;
+        background-color: #fff;
+        border-radius: 50%;
+        box-shadow: 0 0 0 1px #C6C6C6;
+        cursor: pointer;
+    }
+
+    input[type=range]::-webkit-slider-thumb:hover {
+        background: #f7f7f7;
+    }
+
+    input[type=range]::-webkit-slider-thumb:active {
+        box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe;
+    }
+
+    input[type="number"] {
+        color: #8a8383;
+        width: 60px; /* Increased width for larger numbers */
+        height: 30px;
+        font-size: 20px;
+        border: none;
+    }
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        opacity: 1;
+    }
+
+    input[type="range"] {
+        -webkit-appearance: none;
+        appearance: none;
+        height: 2px;
+        width: 100%;
+        position: absolute;
+        background-color: #C6C6C6;
+        pointer-events: none;
+    }
+
+    #tempFromSlider, #rainFromSlider, #pressFromSlider {
+        height: 0;
+        z-index: 1;
+    }
+</style>
+
+<script>
+    // Generic control functions
+    function controlFromInput(fromSlider, fromInput, toInput, controlSlider) {
+        const [from, to] = getParsed(fromInput, toInput);
+        const min = parseFloat(fromInput.min);
+        const max = parseFloat(fromInput.max);
+
+        // Clamp the value within min and max
+        let clampedFrom = Math.max(min, Math.min(max, from));
+        if (isNaN(clampedFrom)) clampedFrom = min; // Fallback to min if invalid
+
+        fillSlider(fromInput, toInput, '#C6C6C6', '#25daa5', controlSlider);
+        if (clampedFrom > to) {
+            fromSlider.value = to;
+            fromInput.value = to;
+        } else {
+            fromSlider.value = clampedFrom;
+            fromInput.value = clampedFrom;
+        }
+    }
+
+    function controlToInput(toSlider, fromInput, toInput, controlSlider) {
+        const [from, to] = getParsed(fromInput, toInput);
+        const min = parseFloat(toInput.min);
+        const max = parseFloat(toInput.max);
+
+        // Clamp the value within min and max
+        let clampedTo = Math.max(min, Math.min(max, to));
+        if (isNaN(clampedTo)) clampedTo = max; // Fallback to max if invalid
+
+        fillSlider(fromInput, toInput, '#C6C6C6', '#25daa5', controlSlider);
+        setToggleAccessible(toInput);
+        if (from <= clampedTo) {
+            toSlider.value = clampedTo;
+            toInput.value = clampedTo;
+        } else {
+            toInput.value = from;
+        }
+    }
+
+    function controlFromSlider(fromSlider, toSlider, fromInput) {
+        const [from, to] = getParsed(fromSlider, toSlider);
+        const min = parseFloat(fromSlider.min);
+        const max = parseFloat(fromSlider.max);
+
+        // Clamp the value within min and max
+        let clampedFrom = Math.max(min, Math.min(max, from));
+        if (isNaN(clampedFrom)) clampedFrom = min;
+
+        fillSlider(fromSlider, toSlider, '#C6C6C6', '#25daa5', toSlider);
+        if (clampedFrom > to) {
+            fromSlider.value = to;
+            fromInput.value = to;
+        } else {
+            fromInput.value = clampedFrom;
+        }
+    }
+
+    function controlToSlider(fromSlider, toSlider, toInput) {
+        const [from, to] = getParsed(fromSlider, toSlider);
+        const min = parseFloat(toSlider.min);
+        const max = parseFloat(toSlider.max);
+
+        // Clamp the value within min and max
+        let clampedTo = Math.max(min, Math.min(max, to));
+        if (isNaN(clampedTo)) clampedTo = max;
+
+        fillSlider(fromSlider, toSlider, '#C6C6C6', '#25daa5', toSlider);
+        setToggleAccessible(toSlider);
+        if (from <= clampedTo) {
+            toSlider.value = clampedTo;
+            toInput.value = clampedTo;
+        } else {
+            toInput.value = from;
+            toSlider.value = from;
+        }
+    }
+
+    function getParsed(currentFrom, currentTo) {
+        const from = parseFloat(currentFrom.value);
+        const to = parseFloat(currentTo.value);
+        return [from, to];
+    }
+
+    function fillSlider(from, to, sliderColor, rangeColor, controlSlider) {
+        const rangeDistance = to.max - to.min;
+        const fromPosition = from.value - to.min;
+        const toPosition = to.value - to.min;
+        controlSlider.style.background = `linear-gradient(
+                to right,
+                ${sliderColor} 0%,
+                ${sliderColor} ${(fromPosition / rangeDistance) * 100}%,
+                ${rangeColor} ${(fromPosition / rangeDistance) * 100}%,
+                ${rangeColor} ${(toPosition / rangeDistance) * 100}%,
+                ${sliderColor} ${(toPosition / rangeDistance) * 100}%,
+                ${sliderColor} 100%)`;
+    }
+
+    function setToggleAccessible(currentTarget) {
+        const toSlider = currentTarget.parentElement.parentElement.querySelector('[id$="ToSlider"]');
+        if (Number(currentTarget.value) <= 0) {
+            toSlider.style.zIndex = 2;
+        } else {
+            toSlider.style.zIndex = 0;
+        }
+    }
+
+    // Initialize Temperature
+    const tempFromSlider = document.querySelector('#tempFromSlider');
+    const tempToSlider = document.querySelector('#tempToSlider');
+    const tempFromInput = document.querySelector('#tempFromInput');
+    const tempToInput = document.querySelector('#tempToInput');
+    fillSlider(tempFromSlider, tempToSlider, '#C6C6C6', '#25daa5', tempToSlider);
+    setToggleAccessible(tempToSlider);
+    tempFromSlider.oninput = () => controlFromSlider(tempFromSlider, tempToSlider, tempFromInput);
+    tempToSlider.oninput = () => controlToSlider(tempFromSlider, tempToSlider, tempToInput);
+    tempFromInput.oninput = () => controlFromInput(tempFromSlider, tempFromInput, tempToInput, tempToSlider);
+    tempToInput.oninput = () => controlToInput(tempToSlider, tempFromInput, tempToInput, tempToSlider);
+
+    // Initialize Rainfall
+    const rainFromSlider = document.querySelector('#rainFromSlider');
+    const rainToSlider = document.querySelector('#rainToSlider');
+    const rainFromInput = document.querySelector('#rainFromInput');
+    const rainToInput = document.querySelector('#rainToInput');
+    fillSlider(rainFromSlider, rainToSlider, '#C6C6C6', '#25daa5', rainToSlider);
+    setToggleAccessible(rainToSlider);
+    rainFromSlider.oninput = () => controlFromSlider(rainFromSlider, rainToSlider, rainFromInput);
+    rainToSlider.oninput = () => controlToSlider(rainFromSlider, rainToSlider, rainToInput);
+    rainFromInput.oninput = () => controlFromInput(rainFromSlider, rainFromInput, rainToInput, rainToSlider);
+    rainToInput.oninput = () => controlToInput(rainToSlider, rainFromInput, rainToInput, rainToSlider);
+
+    // Initialize Pressure
+    const pressFromSlider = document.querySelector('#pressFromSlider');
+    const pressToSlider = document.querySelector('#pressToSlider');
+    const pressFromInput = document.querySelector('#pressFromInput');
+    const pressToInput = document.querySelector('#pressToInput');
+    fillSlider(pressFromSlider, pressToSlider, '#C6C6C6', '#25daa5', pressToSlider);
+    setToggleAccessible(pressToSlider);
+    pressFromSlider.oninput = () => controlFromSlider(pressFromSlider, pressToSlider, pressFromInput);
+    pressToSlider.oninput = () => controlToSlider(pressFromSlider, pressToSlider, pressToInput);
+    pressFromInput.oninput = () => controlFromInput(pressFromSlider, pressFromInput, pressToInput, pressToSlider);
+    pressToInput.oninput = () => controlToInput(pressToSlider, pressFromInput, pressToInput, pressToSlider);
+</script>
