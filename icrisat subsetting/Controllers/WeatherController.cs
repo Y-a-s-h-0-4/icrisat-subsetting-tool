@@ -1,62 +1,86 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using IcrisatSubsetting.Data;
+using IcrisatSubsetting.Models;
 using System.Net.Http;
-using System.Text.Json;
-using WeatherAPI.Models;
 using System.Threading.Tasks;
+using System.Text.Json;
+using System.Collections.Generic;
 using System.Linq;
 
-namespace WeatherAPI.Controllers
+namespace IcrisatSubsetting.Controllers
 {
-    [Route("api/weather")]
+    [Route("api/[controller]")]
     [ApiController]
     public class WeatherController : ControllerBase
     {
+        private readonly AppDbContext _context;
         private readonly HttpClient _httpClient;
-        private readonly string _apiKey = "7eb738b52600ae4e9d514a712822ae13"; // Replace with your OpenWeather API Key
+        private readonly string _apiKey = "7eb738b52600ae4e9d514a712822ae13"; // Replace with your OpenWeather API key
 
-        public WeatherController(IHttpClientFactory httpClientFactory)
+        public WeatherController(AppDbContext context, HttpClient httpClient)
         {
-            _httpClient = httpClientFactory.CreateClient();
+            _context = context;
+            _httpClient = httpClient;
         }
 
-        [HttpPost("history")]
-        public async Task<IActionResult> GetHistoricalWeather([FromBody] WeatherRequest request)
+        [HttpPost("update-weather-data")]
+        public async Task<IActionResult> UpdateWeatherData()
         {
-            if (request == null || request.Latitude == 0 || request.Longitude == 0 || request.StartTime == 0 || request.EndTime == 0)
+            var passportDataList = await _context.PassportData.ToListAsync();
+            if (passportDataList == null || passportDataList.Count == 0)
             {
-                return BadRequest("Invalid input. Provide latitude, longitude, startTime, and endTime.");
+                return NotFound("No records found in PassportData table.");
             }
 
-            string url = $"https://history.openweathermap.org/data/2.5/history/city?lat={request.Latitude}&lon={request.Longitude}&type=hour&start={request.StartTime}&end={request.EndTime}&appid={_apiKey}";
+            var updatedRecords = new List<Characteristics>();
 
-            HttpResponseMessage response = await _httpClient.GetAsync(url);
-            string jsonResponse = await response.Content.ReadAsStringAsync();
-            Console.WriteLine($"API Response: {jsonResponse}");
-
-            if (!response.IsSuccessStatusCode)
+            foreach (var record in passportDataList)
             {
-                return StatusCode((int)response.StatusCode, $"Error: {jsonResponse}");
+                if (record.Latitude == null || record.Longitude == null)
+                {
+                    continue; // Skip if latitude or longitude is null
+                }
+
+                string apiUrl = $"https://api.openweathermap.org/data/2.5/weather?lat={record.Latitude}&lon={record.Longitude}&appid={_apiKey}&units=metric";
+
+                try
+                {
+                    HttpResponseMessage response = await _httpClient.GetAsync(apiUrl);
+                    response.EnsureSuccessStatusCode();
+
+                    string responseBody = await response.Content.ReadAsStringAsync();
+                    using var jsonDoc = JsonDocument.Parse(responseBody);
+                    var root = jsonDoc.RootElement;
+
+                    double temperature = root.GetProperty("main").GetProperty("temp").GetDouble();
+                    double humidity = root.GetProperty("main").GetProperty("humidity").GetDouble();
+                    double rainfall = root.GetProperty("rain").TryGetProperty("1h", out JsonElement rainElement) ? rainElement.GetDouble() : 0.0;
+
+                    var characteristics = await _context.Characteristics
+                        .FirstOrDefaultAsync(c => c.ICRISAT_accession_identifier == record.ICRISAT_accession_identifier);
+
+                    if (characteristics != null)
+                    {
+                        characteristics.Temperature = temperature;
+                        characteristics.Precipitation = humidity;
+                        characteristics.Rainfall = rainfall;
+                        updatedRecords.Add(characteristics);
+                    }
+                }
+                catch (HttpRequestException ex)
+                {
+                    return StatusCode(500, $"Error fetching weather data for {record.ICRISAT_accession_identifier}: {ex.Message}");
+                }
             }
 
-            var weatherData = JsonSerializer.Deserialize<WeatherApiResponse>(jsonResponse);
-
-            if (weatherData == null || weatherData.List == null || weatherData.List.Count == 0)
+            if (updatedRecords.Count > 0)
             {
-                return NotFound("No weather data found for the given time range.");
+                await _context.SaveChangesAsync();
+                return Ok($"{updatedRecords.Count} records updated successfully.");
             }
 
-            double avgTemp = weatherData.List.Average(w => w.Main.Temperature);
-            double avgHumidity = weatherData.List.Average(w => w.Main.Humidity);
-            double avgPressure = weatherData.List.Average(w => w.Main.Pressure);
-
-            var result = new
-            {
-                AverageTemperature = avgTemp,
-                AverageHumidity = avgHumidity,
-                AveragePressure = avgPressure
-            };
-
-            return Ok(result);
+            return NotFound("No matching records found to update.");
         }
     }
 }
