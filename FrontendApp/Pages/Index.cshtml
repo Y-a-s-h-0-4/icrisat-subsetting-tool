@@ -1,79 +1,219 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Weather Data Range Input";
+    ViewData["Title"] = "ICRISAT Subsetting Tool Page";
 }
 
-<div class="container">
-    <h1>Weather Data Range Input</h1>
+<div class="page-container">
+    <header>
+        <div class="logo">Logo? Empty?</div>
+        <h1>ICRISAT Subsetting Tool Page</h1>
+    </header>
 
-    <div class="weather-form">
-        <!-- Temperature Range -->
-        <div class="range_container">
-            <label>Temperature Range (°C)</label>
-            <div class="sliders_control">
-                <input id="tempFromSlider" type="range" value="0" min="-50" max="50" />
-                <input id="tempToSlider" type="range" value="30" min="-50" max="50" />
-            </div>
-            <div class="form_control">
-                <div class="form_control_container">
-                    <div class="form_control_container__time">Min</div>
-                    <input class="form_control_container__time__input" type="number" id="tempFromInput" value="0" min="-50" max="50" />
-                </div>
-                <div class="form_control_container">
-                    <div class="form_control_container__time">Max</div>
-                    <input class="form_control_container__time__input" type="number" id="tempToInput" value="30" min="-50" max="50" />
-                </div>
-            </div>
-        </div>
+    <div class="content-wrapper">
+        <!-- Left Sidebar -->
+        <aside class="sidebar">
+            <div class="filter-section">
+                <h2>Apply Filters</h2>
+                <div class="manual-filters">
+                    <h3>Manual Filters</h3>
+                    <div class="weather-form">
+                        <!-- Temperature Range -->
+                        <div class="range_container">
+                            <label>Temperature Range (°C)</label>
+                            <div class="sliders_control">
+                                <input id="tempFromSlider" type="range" value="0" min="-50" max="50" />
+                                <input id="tempToSlider" type="range" value="30" min="-50" max="50" />
+                            </div>
+                            <div class="form_control">
+                                <div class="form_control_container">
+                                    <div class="form_control_container__time">Min</div>
+                                    <input class="form_control_container__time__input" type="number" id="tempFromInput" value="0" min="-50" max="50" />
+                                </div>
+                                <div class="form_control_container">
+                                    <div class="form_control_container__time">Max</div>
+                                    <input class="form_control_container__time__input" type="number" id="tempToInput" value="30" min="-50" max="50" />
+                                </div>
+                            </div>
+                        </div>
 
-        <!-- Rainfall Range -->
-        <div class="range_container">
-            <label>Rainfall Range (mm)</label>
-            <div class="sliders_control">
-                <input id="rainFromSlider" type="range" value="0" min="0" max="200" />
-                <input id="rainToSlider" type="range" value="50" min="0" max="200" />
-            </div>
-            <div class="form_control">
-                <div class="form_control_container">
-                    <div class="form_control_container__time">Min</div>
-                    <input class="form_control_container__time__input" type="number" id="rainFromInput" value="0" min="0" max="200" />
-                </div>
-                <div class="form_control_container">
-                    <div class="form_control_container__time">Max</div>
-                    <input class="form_control_container__time__input" type="number" id="rainToInput" value="50" min="0" max="200" />
-                </div>
-            </div>
-        </div>
+                        <!-- Rainfall Range -->
+                        <div class="range_container">
+                            <label>Rainfall Range (mm)</label>
+                            <div class="sliders_control">
+                                <input id="rainFromSlider" type="range" value="0" min="0" max="200" />
+                                <input id="rainToSlider" type="range" value="50" min="0" max="200" />
+                            </div>
+                            <div class="form_control">
+                                <div class="form_control_container">
+                                    <div class="form_control_container__time">Min</div>
+                                    <input class="form_control_container__time__input" type="number" id="rainFromInput" value="0" min="0" max="200" />
+                                </div>
+                                <div class="form_control_container">
+                                    <div class="form_control_container__time">Max</div>
+                                    <input class="form_control_container__time__input" type="number" id="rainToInput" value="50" min="0" max="200" />
+                                </div>
+                            </div>
+                        </div>
 
-        <!-- Pressure Range (in kPa) -->
-        <div class="range_container">
-            <label>Pressure Range (kPa)</label>
-            <div class="sliders_control">
-                <input id="pressFromSlider" type="range" value="96.6" min="90" max="110" />
-                <input id="pressToSlider" type="range" value="111" min="90" max="110" />
-            </div>
-            <div class="form_control">
-                <div class="form_control_container">
-                    <div class="form_control_container__time">Min</div>
-                    <input class="form_control_container__time__input" type="number" id="pressFromInput" value="96.6" min="90" max="110" step="0.1" />
+                        <!-- Pressure Range (in kPa) -->
+                        <div class="range_container">
+                            <label>Pressure Range (kPa)</label>
+                            <div class="sliders_control">
+                                <input id="pressFromSlider" type="range" value="96.6" min="90" max="110" />
+                                <input id="pressToSlider" type="range" value="111" min="90" max="110" />
+                            </div>
+                            <div class="form_control">
+                                <div class="form_control_container">
+                                    <div class="form_control_container__time">Min</div>
+                                    <input class="form_control_container__time__input" type="number" id="pressFromInput" value="96.6" min="90" max="110" step="0.1" />
+                                </div>
+                                <div class="form_control_container">
+                                    <div class="form_control_container__time">Max</div>
+                                    <input class="form_control_container__time__input" type="number" id="pressToInput" value="111" min="90" max="110" step="0.1" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="form_control_container">
-                    <div class="form_control_container__time">Max</div>
-                    <input class="form_control_container__time__input" type="number" id="pressToInput" value="111" min="90" max="110" step="0.1" />
-                </div>
             </div>
-        </div>
+            <div class="chatbot-section">
+                <button class="chatbot-button">Chatbot</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <h2>Display Data</h2>
+            <!-- Debug: Display the count of RaceValues -->
+            <p>Debug: Number of Race values received: @(Model.RaceValues?.Count ?? 0)</p>
+            @if (Model.RaceValues != null && Model.RaceValues.Any(r => r != null))
+            {
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Race</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var value in Model.RaceValues.Where(r => r != null))
+                        {
+                            <tr>
+                                <td>@value</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>No non-null Race values available.</p>
+            }
+        </main>
     </div>
 </div>
 
 <style>
-    .container {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
+    /* General Layout */
+    .page-container {
+        font-family: Arial, sans-serif;
     }
 
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #e6f0fa;
+        padding: 10px 20px;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .logo {
+        font-size: 14px;
+        color: #333;
+    }
+
+    header h1 {
+        font-size: 24px;
+        margin: 0;
+    }
+
+    .content-wrapper {
+        display: flex;
+        min-height: calc(100vh - 60px); /* Adjust based on header height */
+    }
+
+    /* Sidebar */
+    .sidebar {
+        width: 25%;
+        background-color: #f0f7fd;
+        padding: 20px;
+        border-right: 1px solid #ccc;
+    }
+
+    .filter-section h2 {
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+
+    .manual-filters h3 {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+
+    .chatbot-section {
+        margin-top: 20px;
+    }
+
+    .chatbot-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+        .chatbot-button:hover {
+            background-color: #0056b3;
+        }
+
+    /* Main Content */
+    .main-content {
+        width: 75%;
+        padding: 20px;
+        background-color: #e6f0fa;
+    }
+
+        .main-content h2 {
+            font-size: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+        .data-table th, .data-table td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .data-table th {
+            background-color: #f0f7fd;
+            font-weight: bold;
+        }
+
+    /* Range Slider Styles */
     .weather-form {
         margin-top: 20px;
     }
@@ -81,8 +221,7 @@
     .range_container {
         display: flex;
         flex-direction: column;
-        width: 80%;
-        margin: 40px auto;
+        margin: 20px 0;
     }
 
     .sliders_control {
@@ -94,13 +233,13 @@
         position: relative;
         display: flex;
         justify-content: space-between;
-        font-size: 24px;
+        font-size: 16px;
         color: #635a5a;
     }
 
     label {
         font-weight: bold;
-        margin-bottom: 10px;
+        margin-bottom: 5px;
     }
 
     input[type=range]::-webkit-slider-thumb {
@@ -135,9 +274,9 @@
 
     input[type="number"] {
         color: #8a8383;
-        width: 60px; /* Increased width for larger numbers */
+        width: 60px;
         height: 30px;
-        font-size: 20px;
+        font-size: 16px;
         border: none;
     }
 
@@ -169,9 +308,8 @@
         const min = parseFloat(fromInput.min);
         const max = parseFloat(fromInput.max);
 
-        // Clamp the value within min and max
         let clampedFrom = Math.max(min, Math.min(max, from));
-        if (isNaN(clampedFrom)) clampedFrom = min; // Fallback to min if invalid
+        if (isNaN(clampedFrom)) clampedFrom = min;
 
         fillSlider(fromInput, toInput, '#C6C6C6', '#25daa5', controlSlider);
         if (clampedFrom > to) {
@@ -188,9 +326,8 @@
         const min = parseFloat(toInput.min);
         const max = parseFloat(toInput.max);
 
-        // Clamp the value within min and max
         let clampedTo = Math.max(min, Math.min(max, to));
-        if (isNaN(clampedTo)) clampedTo = max; // Fallback to max if invalid
+        if (isNaN(clampedTo)) clampedTo = max;
 
         fillSlider(fromInput, toInput, '#C6C6C6', '#25daa5', controlSlider);
         setToggleAccessible(toInput);
@@ -207,7 +344,6 @@
         const min = parseFloat(fromSlider.min);
         const max = parseFloat(fromSlider.max);
 
-        // Clamp the value within min and max
         let clampedFrom = Math.max(min, Math.min(max, from));
         if (isNaN(clampedFrom)) clampedFrom = min;
 
@@ -225,7 +361,6 @@
         const min = parseFloat(toSlider.min);
         const max = parseFloat(toSlider.max);
 
-        // Clamp the value within min and max
         let clampedTo = Math.max(min, Math.min(max, to));
         if (isNaN(clampedTo)) clampedTo = max;
 
