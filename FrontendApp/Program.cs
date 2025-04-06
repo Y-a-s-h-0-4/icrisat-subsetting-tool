@@ -1,7 +1,13 @@
+using Microsoft.EntityFrameworkCore;
+using FrontendApp.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+
+builder.Services.AddDbContext<IcristatDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("IcristatDb")));
 
 var app = builder.Build();
 
