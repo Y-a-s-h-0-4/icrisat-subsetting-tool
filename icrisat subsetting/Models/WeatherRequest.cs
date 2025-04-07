@@ -1,10 +1,15 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace WeatherAPI.Models
 {
     public class WeatherRequest
     {
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
-        public long StartTime { get; set; } // Unix timestamp in seconds
-        public long EndTime { get; set; }   // Unix timestamp in seconds
+        [Required]
+        public string ICRISAT_accession_identifier { get; set; }
+
+        [Required]
+        public long StartTime { get; set; }
+
+        public long? EndTime { get; set; }
     }
 }
