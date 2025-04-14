@@ -15,67 +15,72 @@
         <aside class="sidebar">
             <div class="filter-section">
                 <h2>Apply Filters</h2>
-                <div class="manual-filters">
-                    <h3>Manual Filters</h3>
-                    <div class="weather-form">
-                        <!-- Temperature Range -->
-                        <div class="range_container">
-                            <label>Temperature Range (°C)</label>
-                            <div class="sliders_control">
-                                <input id="tempFromSlider" type="range" value="0" min="-50" max="50" />
-                                <input id="tempToSlider" type="range" value="30" min="-50" max="50" />
-                            </div>
-                            <div class="form_control">
-                                <div class="form_control_container">
-                                    <div class="form_control_container__time">Min</div>
-                                    <input class="form_control_container__time__input" type="number" id="tempFromInput" value="0" min="-50" max="50" />
+                <form method="post">
+                    <div class="manual-filters">
+                        <h3>Manual Filters</h3>
+                        <div class="weather-form">
+                            <!-- Temperature Range -->
+                            <div class="range_container">
+                                <label>Temperature Range (°C)</label>
+                                <div class="sliders_control">
+                                    <input id="tempFromSlider" type="range" name="TempMin" value="@Model.TempMin" min="-50" max="50" />
+                                    <input id="tempToSlider" type="range" name="TempMax" value="@Model.TempMax" min="-50" max="50" />
                                 </div>
-                                <div class="form_control_container">
-                                    <div class="form_control_container__time">Max</div>
-                                    <input class="form_control_container__time__input" type="number" id="tempToInput" value="30" min="-50" max="50" />
+                                <div class="form_control">
+                                    <div class="form_control_container">
+                                        <div class="form_control_container__time">Min</div>
+                                        <input class="form_control_container__time__input" type="number" name="TempMin" id="tempFromInput" value="@Model.TempMin" min="-50" max="50" />
+                                    </div>
+                                    <div class="form_control_container">
+                                        <div class="form_control_container__time">Max</div>
+                                        <input class="form_control_container__time__input" type="number" name="TempMax" id="tempToInput" value="@Model.TempMax" min="-50" max="50" />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Rainfall Range -->
-                        <div class="range_container">
-                            <label>Rainfall Range (mm)</label>
-                            <div class="sliders_control">
-                                <input id="rainFromSlider" type="range" value="0" min="0" max="200" />
-                                <input id="rainToSlider" type="range" value="50" min="0" max="200" />
-                            </div>
-                            <div class="form_control">
-                                <div class="form_control_container">
-                                    <div class="form_control_container__time">Min</div>
-                                    <input class="form_control_container__time__input" type="number" id="rainFromInput" value="0" min="0" max="200" />
+                            <!-- Humidity Range -->
+                            <div class="range_container">
+                                <label>Humidity Range (%)</label>
+                                <div class="sliders_control">
+                                    <input id="humidityFromSlider" type="range" name="HumidityMin" value="@Model.HumidityMin" min="0" max="100" />
+                                    <input id="humidityToSlider" type="range" name="HumidityMax" value="@Model.HumidityMax" min="0" max="100" />
                                 </div>
-                                <div class="form_control_container">
-                                    <div class="form_control_container__time">Max</div>
-                                    <input class="form_control_container__time__input" type="number" id="rainToInput" value="50" min="0" max="200" />
+                                <div class="form_control">
+                                    <div class="form_control_container">
+                                        <div class="form_control_container__time">Min</div>
+                                        <input class="form_control_container__time__input" type="number" name="HumidityMin" id="humidityFromInput" value="@Model.HumidityMin" min="0" max="100" />
+                                    </div>
+                                    <div class="form_control_container">
+                                        <div class="form_control_container__time">Max</div>
+                                        <input class="form_control_container__time__input" type="number" name="HumidityMax" id="humidityToInput" value="@Model.HumidityMax" min="0" max="100" />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Pressure Range (in kPa) -->
-                        <div class="range_container">
-                            <label>Pressure Range (kPa)</label>
-                            <div class="sliders_control">
-                                <input id="pressFromSlider" type="range" value="96.6" min="90" max="110" />
-                                <input id="pressToSlider" type="range" value="111" min="90" max="110" />
-                            </div>
-                            <div class="form_control">
-                                <div class="form_control_container">
-                                    <div class="form_control_container__time">Min</div>
-                                    <input class="form_control_container__time__input" type="number" id="pressFromInput" value="96.6" min="90" max="110" step="0.1" />
+                            <!-- Rainfall Range -->
+                            <div class="range_container">
+                                <label>Rainfall Range (mm)</label>
+                                <div class="sliders_control">
+                                    <input id="rainFromSlider" type="range" name="RainfallMin" value="@Model.RainfallMin" min="0" max="200" />
+                                    <input id="rainToSlider" type="range" name="RainfallMax" value="@Model.RainfallMax" min="0" max="200" />
                                 </div>
-                                <div class="form_control_container">
-                                    <div class="form_control_container__time">Max</div>
-                                    <input class="form_control_container__time__input" type="number" id="pressToInput" value="111" min="90" max="110" step="0.1" />
+                                <div class="form_control">
+                                    <div class="form_control_container">
+                                        <div class="form_control_container__time">Min</div>
+                                        <input class="form_control_container__time__input" type="number" name="RainfallMin" id="rainFromInput" value="@Model.RainfallMin" min="0" max="200" />
+                                    </div>
+                                    <div class="form_control_container">
+                                        <div class="form_control_container__time">Max</div>
+                                        <input class="form_control_container__time__input" type="number" name="RainfallMax" id="rainToInput" value="@Model.RainfallMax" min="0" max="200" />
+                                    </div>
                                 </div>
                             </div>
+
+                            <!-- Submit Button -->
+                            <button type="submit" class="submit-button">Submit</button>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
             <div class="chatbot-section">
                 <button class="chatbot-button">Chatbot</button>
@@ -85,29 +90,51 @@
         <!-- Main Content -->
         <main class="main-content">
             <h2>Display Data</h2>
-            <!-- Debug: Display the count of RaceValues -->
-            <p>Debug: Number of Race values received: @(Model.RaceValues?.Count ?? 0)</p>
-            @if (Model.RaceValues != null && Model.RaceValues.Any(r => r != null))
+            <p>Debug: Number of passport records received: @Model.PassportResults?.Count ?? 0</p>
+            @if (Model.PassportResults != null && Model.PassportResults.Any())
             {
+                <p>Showing page @Model.PageIndex of @Model.TotalPages (Total Records: @Model.TotalRecords)</p>
                 <table class="data-table">
                     <thead>
                         <tr>
-                            <th>Race</th>
+                            <th>ICRISAT Accession Identifier</th>
+                            <th>Accession Identifier</th>
+                            <th>Crop</th>
+                            <th>DOI</th>
+                            <th>Local Name</th>
+                            <th>Genus</th>
+                            <th>Species</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var value in Model.RaceValues.Where(r => r != null))
+                        @foreach (var passport in Model.PassportResults)
                         {
                             <tr>
-                                <td>@value</td>
+                                <td>@passport.ICRISATAccessionIdentifier</td>
+                                <td>@passport.AccessionIdentifier</td>
+                                <td>@passport.Crop</td>
+                                <td>@passport.DOI</td>
+                                <td>@passport.LocalName</td>
+                                <td>@passport.Genus</td>
+                                <td>@passport.Species</td>
                             </tr>
                         }
                     </tbody>
                 </table>
+                <div class="pagination">
+                    @if (Model.PageIndex > 1)
+                    {
+                        <a asp-page="Index" asp-route-pageIndex="@(Model.PageIndex - 1)" asp-route-TempMin="@Model.TempMin" asp-route-TempMax="@Model.TempMax" asp-route-HumidityMin="@Model.HumidityMin" asp-route-HumidityMax="@Model.HumidityMax" asp-route-RainfallMin="@Model.RainfallMin" asp-route-RainfallMax="@Model.RainfallMax" class="btn btn-secondary">Previous</a>
+                    }
+                    @if (Model.PageIndex < Model.TotalPages)
+                    {
+                        <a asp-page="Index" asp-route-pageIndex="@(Model.PageIndex + 1)" asp-route-TempMin="@Model.TempMin" asp-route-TempMax="@Model.TempMax" asp-route-HumidityMin="@Model.HumidityMin" asp-route-HumidityMax="@Model.HumidityMax" asp-route-RainfallMin="@Model.RainfallMin" asp-route-RainfallMax="@Model.RainfallMax" class="btn btn-secondary">Next</a>
+                    }
+                </div>
             }
             else
             {
-                <p>No non-null Race values available.</p>
+                <p>No passport data available.</p>
             }
         </main>
     </div>
@@ -140,7 +167,7 @@
 
     .content-wrapper {
         display: flex;
-        min-height: calc(100vh - 60px); /* Adjust based on header height */
+        min-height: calc(100vh - 60px);
     }
 
     /* Sidebar */
@@ -183,6 +210,23 @@
             background-color: #0056b3;
         }
 
+    .submit-button {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        margin-top: 20px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+        .submit-button:hover {
+            background-color: #218838;
+        }
+
     /* Main Content */
     .main-content {
         width: 75%;
@@ -205,13 +249,43 @@
         .data-table th, .data-table td {
             border: 1px solid #ccc;
             padding: 8px;
-            text-align: center;
+            text-align: left;
+            word-wrap: break-word;
+            max-width: 150px;
         }
 
         .data-table th {
             background-color: #f0f7fd;
             font-weight: bold;
         }
+
+    .pagination {
+        margin-top: 15px;
+    }
+
+    .btn {
+        padding: 5px 10px;
+        margin-right: 5px;
+        text-decoration: none;
+        color: white;
+        background-color: #007bff;
+        border: 1px solid #007bff;
+        border-radius: 4px;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+        text-decoration: none;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
 
     /* Range Slider Styles */
     .weather-form {
@@ -295,7 +369,7 @@
         pointer-events: none;
     }
 
-    #tempFromSlider, #rainFromSlider, #pressFromSlider {
+    #tempFromSlider, #rainFromSlider, #humidityFromSlider {
         height: 0;
         z-index: 1;
     }
@@ -386,13 +460,13 @@
         const fromPosition = from.value - to.min;
         const toPosition = to.value - to.min;
         controlSlider.style.background = `linear-gradient(
-                to right,
-                ${sliderColor} 0%,
-                ${sliderColor} ${(fromPosition / rangeDistance) * 100}%,
-                ${rangeColor} ${(fromPosition / rangeDistance) * 100}%,
-                ${rangeColor} ${(toPosition / rangeDistance) * 100}%,
-                ${sliderColor} ${(toPosition / rangeDistance) * 100}%,
-                ${sliderColor} 100%)`;
+                    to right,
+                    ${sliderColor} 0%,
+                    ${sliderColor} ${(fromPosition / rangeDistance) * 100}%,
+                    ${rangeColor} ${(fromPosition / rangeDistance) * 100}%,
+                    ${rangeColor} ${(toPosition / rangeDistance) * 100}%,
+                    ${sliderColor} ${(toPosition / rangeDistance) * 100}%,
+                    ${sliderColor} 100%)`;
     }
 
     function setToggleAccessible(currentTarget) {
@@ -416,6 +490,18 @@
     tempFromInput.oninput = () => controlFromInput(tempFromSlider, tempFromInput, tempToInput, tempToSlider);
     tempToInput.oninput = () => controlToInput(tempToSlider, tempFromInput, tempToInput, tempToSlider);
 
+    // Initialize Humidity
+    const humidityFromSlider = document.querySelector('#humidityFromSlider');
+    const humidityToSlider = document.querySelector('#humidityToSlider');
+    const humidityFromInput = document.querySelector('#humidityFromInput');
+    const humidityToInput = document.querySelector('#humidityToInput');
+    fillSlider(humidityFromSlider, humidityToSlider, '#C6C6C6', '#25daa5', humidityToSlider);
+    setToggleAccessible(humidityToSlider);
+    humidityFromSlider.oninput = () => controlFromSlider(humidityFromSlider, humidityToSlider, humidityFromInput);
+    humidityToSlider.oninput = () => controlToSlider(humidityFromSlider, humidityToSlider, humidityToInput);
+    humidityFromInput.oninput = () => controlFromInput(humidityFromSlider, humidityFromInput, humidityToInput, humidityToSlider);
+    humidityToInput.oninput = () => controlToInput(humidityToSlider, humidityFromInput, humidityToInput, humidityToSlider);
+
     // Initialize Rainfall
     const rainFromSlider = document.querySelector('#rainFromSlider');
     const rainToSlider = document.querySelector('#rainToSlider');
@@ -427,16 +513,4 @@
     rainToSlider.oninput = () => controlToSlider(rainFromSlider, rainToSlider, rainToInput);
     rainFromInput.oninput = () => controlFromInput(rainFromSlider, rainFromInput, rainToInput, rainToSlider);
     rainToInput.oninput = () => controlToInput(rainToSlider, rainFromInput, rainToInput, rainToSlider);
-
-    // Initialize Pressure
-    const pressFromSlider = document.querySelector('#pressFromSlider');
-    const pressToSlider = document.querySelector('#pressToSlider');
-    const pressFromInput = document.querySelector('#pressFromInput');
-    const pressToInput = document.querySelector('#pressToInput');
-    fillSlider(pressFromSlider, pressToSlider, '#C6C6C6', '#25daa5', pressToSlider);
-    setToggleAccessible(pressToSlider);
-    pressFromSlider.oninput = () => controlFromSlider(pressFromSlider, pressToSlider, pressFromInput);
-    pressToSlider.oninput = () => controlToSlider(pressFromSlider, pressToSlider, pressToInput);
-    pressFromInput.oninput = () => controlFromInput(pressFromSlider, pressFromInput, pressToInput, pressToSlider);
-    pressToInput.oninput = () => controlToInput(pressToSlider, pressFromInput, pressToInput, pressToSlider);
 </script>

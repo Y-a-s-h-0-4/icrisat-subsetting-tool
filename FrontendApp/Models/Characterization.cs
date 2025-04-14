@@ -1,18 +1,28 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FrontendApp.Models
 {
-    [Table("charecterstics")] // Map to the correct table name
+    [Table("charecterstics")]
     public class Characterization
     {
-        public int Id { get; set; } // Assuming there's an Id column as the primary key (you may need to adjust if the primary key is different)
-
+        [Key] // Mark as primary key
         [Column("ICRISAT_accession_identifier")]
         public string ICRISATAccessionIdentifier { get; set; }
 
         [Column("Race")]
         public string Race { get; set; }
 
+        [Column("Temperature")]
+        public double Temperature { get; set; }
+
+        [Column("Humidity")]
+        public double Humidity { get; set; }
+
+        [Column("Rainfall")]
+        public double Rainfall { get; set; }
+
+        // Other columns (omitted for brevity, but included in the previous response)
         [Column("Plant_height_cm_postrainy")]
         public float? PlantHeightCmPostrainy { get; set; }
 
@@ -123,15 +133,6 @@ namespace FrontendApp.Models
 
         [Column("Year_of_characterization")]
         public int? YearOfCharacterization { get; set; }
-
-        [Column("Temperature")]
-        public float? Temperature { get; set; }
-
-        [Column("Humidity")]
-        public float? Humidity { get; set; }
-
-        [Column("Rainfall")]
-        public float? Rainfall { get; set; }
 
         [Column("Timestamp")]
         public DateTime? Timestamp { get; set; }
