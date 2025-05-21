@@ -5,11 +5,6 @@
 }
 
 <div class="page-container">
-    <header>
-        <div class="logo">Logo? Empty?</div>
-        <h1>ICRISAT Subsetting Tool Page</h1>
-    </header>
-
     <div class="content-wrapper">
         <!-- Left Sidebar -->
         <aside class="sidebar">
@@ -37,7 +32,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <!-- Humidity Range -->
                             <div class="range_container">
                                 <label>Humidity Range (%)</label>
@@ -56,7 +50,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <!-- Rainfall Range -->
                             <div class="range_container">
                                 <label>Rainfall Range (mm)</label>
@@ -75,7 +68,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <!-- Submit Button -->
                             <button type="submit" class="submit-button">Submit</button>
                         </div>
@@ -83,17 +75,26 @@
                 </form>
             </div>
             <div class="chatbot-section">
-                <button class="chatbot-button">Chatbot</button>
+                <h3>Chatbot Assistant</h3>
+                <div class="chatbot-input">
+                    <textarea id="chatbotInput" class="chatbot-textarea" placeholder="Ask about weather conditions..."></textarea>
+                    <button id="chatbotSubmit" class="chatbot-button">Ask</button>
+                </div>
+                <div id="chatbotResponse" class="chatbot-response"></div>
             </div>
         </aside>
-
         <!-- Main Content -->
         <main class="main-content">
-            <h2>Display Data</h2>
-            <p>Debug: Number of passport records received: @Model.PassportResults?.Count ?? 0</p>
+            <h2>Passport Data Results</h2>
+            <p class="debug-info">Debug: Number of passport records received: @Model.PassportResults?.Count ?? 0</p>
             @if (Model.PassportResults != null && Model.PassportResults.Any())
             {
                 <p>Showing page @Model.PageIndex of @Model.TotalPages (Total Records: @Model.TotalRecords)</p>
+                <div class="export-section">
+                    <button type="button" id="exportToExcel" class="export-button">
+                        <i class="fas fa-file-excel"></i> Export to Excel
+                    </button>
+                </div>
                 <table class="data-table">
                     <thead>
                         <tr>
@@ -134,175 +135,225 @@
             }
             else
             {
-                <p>No passport data available.</p>
+                <p class="no-data">No passport data available.</p>
             }
         </main>
     </div>
 </div>
 
 <style>
-    /* General Layout */
-    .page-container {
-        font-family: Arial, sans-serif;
-    }
-
-    header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background-color: #e6f0fa;
-        padding: 10px 20px;
-        border-bottom: 1px solid #ccc;
-    }
-
-    .logo {
-        font-size: 14px;
-        color: #333;
-    }
-
-    header h1 {
-        font-size: 24px;
+    body {
+        background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+        min-height: 100vh;
         margin: 0;
     }
-
+    .page-container {
+        font-family: 'Segoe UI', Arial, sans-serif;
+        color: #222;
+    }
     .content-wrapper {
         display: flex;
-        min-height: calc(100vh - 60px);
+        min-height: calc(100vh - 0px);
+        box-shadow: 0 4px 32px 0 rgba(60, 120, 216, 0.08);
+        border-radius: 18px;
+        margin: 32px auto;
+        max-width: 1400px;
+        background: #fff;
+        overflow: hidden;
     }
-
     /* Sidebar */
     .sidebar {
-        width: 25%;
-        background-color: #f0f7fd;
-        padding: 20px;
-        border-right: 1px solid #ccc;
+        width: 27%;
+        background: linear-gradient(135deg, #4f8cff 0%, #6fd6ff 100%);
+        padding: 32px 24px 24px 24px;
+        border-right: 1px solid #e0eafc;
+        color: #fff;
+        min-width: 320px;
     }
-
     .filter-section h2 {
-        font-size: 20px;
-        margin-bottom: 15px;
+        font-size: 22px;
+        margin-bottom: 18px;
+        color: #fff;
+        letter-spacing: 1px;
     }
-
     .manual-filters h3 {
         font-size: 18px;
         margin-bottom: 10px;
+        color: #e0eafc;
     }
-
     .chatbot-section {
-        margin-top: 20px;
+        margin-top: 32px;
+        padding: 18px;
+        background: rgba(255,255,255,0.13);
+        border-radius: 10px;
+        box-shadow: 0 2px 8px 0 rgba(60, 120, 216, 0.08);
     }
-
-    .chatbot-button {
+    .chatbot-section h3 {
+        margin-bottom: 10px;
+        color: #fff;
+    }
+    .chatbot-input {
         display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        padding: 10px;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 50%;
-        font-size: 16px;
-        cursor: pointer;
+        flex-direction: column;
+        gap: 10px;
     }
-
-        .chatbot-button:hover {
-            background-color: #0056b3;
-        }
-
+    .chatbot-textarea {
+        width: 100%;
+        min-height: 80px;
+        padding: 10px;
+        border: 1px solid #b3d1ff;
+        border-radius: 4px;
+        resize: vertical;
+        font-size: 15px;
+    }
+    .chatbot-button {
+        padding: 8px 15px;
+        background-color: #fff;
+        color: #007bff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        align-self: flex-end;
+        font-weight: bold;
+        transition: background 0.2s, color 0.2s;
+    }
+    .chatbot-button:hover {
+        background-color: #007bff;
+        color: #fff;
+    }
+    .chatbot-response {
+        margin-top: 15px;
+        padding: 10px;
+        background-color: #e9ecef;
+        border-radius: 4px;
+        display: none;
+        color: #333;
+    }
+    .chatbot-response.error {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+    .chatbot-response.success {
+        background-color: #d4edda;
+        color: #155724;
+    }
     .submit-button {
         display: block;
         width: 100%;
-        padding: 10px;
-        margin-top: 20px;
-        background-color: #28a745;
-        color: white;
+        padding: 12px;
+        margin-top: 24px;
+        background: linear-gradient(90deg, #1e90ff 0%, #00c6ff 100%);
+        color: #fff;
         border: none;
-        border-radius: 5px;
-        font-size: 16px;
+        border-radius: 8px;
+        font-size: 17px;
         cursor: pointer;
+        font-weight: bold;
+        box-shadow: 0 2px 8px 0 rgba(30, 144, 255, 0.10);
+        transition: background 0.2s;
     }
-
-        .submit-button:hover {
-            background-color: #218838;
-        }
-
+    .submit-button:hover {
+        background: linear-gradient(90deg, #00c6ff 0%, #1e90ff 100%);
+    }
     /* Main Content */
     .main-content {
-        width: 75%;
-        padding: 20px;
-        background-color: #e6f0fa;
+        width: 73%;
+        padding: 40px 36px 36px 36px;
+        background: linear-gradient(135deg, #f8fafc 0%, #e0eafc 100%);
+        min-height: 100vh;
     }
-
-        .main-content h2 {
-            font-size: 20px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
+    .main-content h2 {
+        font-size: 26px;
+        text-align: left;
+        margin-bottom: 18px;
+        color: #1e90ff;
+        letter-spacing: 1px;
+    }
+    .debug-info {
+        color: #888;
+        font-size: 13px;
+        margin-bottom: 10px;
+    }
+    .no-data {
+        color: #d9534f;
+        font-size: 18px;
+        text-align: center;
+        margin-top: 40px;
+    }
     .data-table {
         width: 100%;
         border-collapse: collapse;
         margin-top: 20px;
+        background: #fff;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px 0 rgba(60, 120, 216, 0.08);
     }
-
-        .data-table th, .data-table td {
-            border: 1px solid #ccc;
-            padding: 8px;
-            text-align: left;
-            word-wrap: break-word;
-            max-width: 150px;
-        }
-
-        .data-table th {
-            background-color: #f0f7fd;
-            font-weight: bold;
-        }
-
+    .data-table th, .data-table td {
+        border: none;
+        padding: 12px 10px;
+        text-align: left;
+        word-wrap: break-word;
+        max-width: 180px;
+        font-size: 15px;
+    }
+    .data-table th {
+        background: linear-gradient(90deg, #1e90ff 0%, #00c6ff 100%);
+        color: #fff;
+        font-weight: bold;
+        letter-spacing: 0.5px;
+    }
+    .data-table tbody tr:nth-child(even) {
+        background: #f0f7fd;
+    }
+    .data-table tbody tr:nth-child(odd) {
+        background: #e6f0fa;
+    }
+    .data-table tbody tr:hover {
+        background: #d0e7ff;
+        transition: background 0.2s;
+    }
     .pagination {
-        margin-top: 15px;
+        margin-top: 18px;
+        text-align: right;
     }
-
     .btn {
-        padding: 5px 10px;
-        margin-right: 5px;
+        padding: 7px 16px;
+        margin-right: 7px;
         text-decoration: none;
-        color: white;
-        background-color: #007bff;
-        border: 1px solid #007bff;
-        border-radius: 4px;
+        color: #fff;
+        background: linear-gradient(90deg, #1e90ff 0%, #00c6ff 100%);
+        border: none;
+        border-radius: 6px;
+        font-size: 15px;
+        font-weight: bold;
+        box-shadow: 0 2px 8px 0 rgba(30, 144, 255, 0.10);
+        transition: background 0.2s;
     }
-
     .btn-secondary {
-        background-color: #6c757d;
-        border-color: #6c757d;
+        background: linear-gradient(90deg, #6c757d 0%, #adb5bd 100%);
+        border: none;
     }
-
     .btn:hover {
-        background-color: #0056b3;
+        background: linear-gradient(90deg, #00c6ff 0%, #1e90ff 100%);
         text-decoration: none;
     }
-
     .btn-secondary:hover {
-        background-color: #5a6268;
+        background: linear-gradient(90deg, #adb5bd 0%, #6c757d 100%);
     }
-
     /* Range Slider Styles */
     .weather-form {
         margin-top: 20px;
     }
-
     .range_container {
         display: flex;
         flex-direction: column;
         margin: 20px 0;
     }
-
     .sliders_control {
         position: relative;
         min-height: 50px;
     }
-
     .form_control {
         position: relative;
         display: flex;
@@ -310,12 +361,11 @@
         font-size: 16px;
         color: #635a5a;
     }
-
     label {
         font-weight: bold;
         margin-bottom: 5px;
+        color: #fff;
     }
-
     input[type=range]::-webkit-slider-thumb {
         -webkit-appearance: none;
         pointer-events: all;
@@ -326,7 +376,6 @@
         box-shadow: 0 0 0 1px #C6C6C6;
         cursor: pointer;
     }
-
     input[type=range]::-moz-range-thumb {
         -webkit-appearance: none;
         pointer-events: all;
@@ -337,28 +386,26 @@
         box-shadow: 0 0 0 1px #C6C6C6;
         cursor: pointer;
     }
-
     input[type=range]::-webkit-slider-thumb:hover {
         background: #f7f7f7;
     }
-
     input[type=range]::-webkit-slider-thumb:active {
         box-shadow: inset 0 0 3px #387bbe, 0 0 9px #387bbe;
     }
-
     input[type="number"] {
         color: #8a8383;
         width: 60px;
         height: 30px;
         font-size: 16px;
         border: none;
+        border-radius: 4px;
+        padding: 4px 8px;
+        background: #f8fafc;
     }
-
     input[type=number]::-webkit-inner-spin-button,
     input[type=number]::-webkit-outer-spin-button {
         opacity: 1;
     }
-
     input[type="range"] {
         -webkit-appearance: none;
         appearance: none;
@@ -368,10 +415,34 @@
         background-color: #C6C6C6;
         pointer-events: none;
     }
-
     #tempFromSlider, #rainFromSlider, #humidityFromSlider {
         height: 0;
         z-index: 1;
+    }
+    .export-section {
+        margin: 24px 0 0 0;
+        text-align: right;
+    }
+    .export-button {
+        background: linear-gradient(90deg, #1e7e34 0%, #28a745 100%);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 16px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: background 0.3s;
+        font-weight: bold;
+        box-shadow: 0 2px 8px 0 rgba(40, 167, 69, 0.10);
+    }
+    .export-button:hover {
+        background: linear-gradient(90deg, #28a745 0%, #1e7e34 100%);
+    }
+    .fas {
+        font-size: 18px;
     }
 </style>
 
@@ -513,4 +584,158 @@
     rainToSlider.oninput = () => controlToSlider(rainFromSlider, rainToSlider, rainToInput);
     rainFromInput.oninput = () => controlFromInput(rainFromSlider, rainFromInput, rainToInput, rainToSlider);
     rainToInput.oninput = () => controlToInput(rainToSlider, rainFromInput, rainToInput, rainToSlider);
+
+    // Chatbot functionality
+    document.getElementById('chatbotSubmit').addEventListener('click', async function() {
+        const input = document.getElementById('chatbotInput').value;
+        const responseDiv = document.getElementById('chatbotResponse');
+        
+        if (!input.trim()) {
+            responseDiv.textContent = 'Please enter your question.';
+            responseDiv.className = 'chatbot-response error';
+            responseDiv.style.display = 'block';
+            return;
+        }
+
+        try {
+            // Show loading state
+            responseDiv.textContent = 'Processing your request...';
+            responseDiv.className = 'chatbot-response';
+            responseDiv.style.display = 'block';
+
+            const response = await fetch('http://127.0.0.1:5000/extract-traits', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    text: input
+                })
+            });
+
+            console.log('Response status:', response.status);
+
+            if (!response.ok) {
+                if (response.status === 415) {
+                    throw new Error('Server does not support the request content type. Please check API specifications.');
+                }
+                const errorText = await response.text();
+                console.error('Error response:', errorText);
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            let data;
+            try {
+                const textData = await response.text();
+                console.log('Raw response:', textData);
+                data = JSON.parse(textData);
+            } catch (error) {
+                console.error('JSON parsing error:', error);
+                throw new Error('Invalid JSON response from server');
+            }
+
+            console.log('Parsed data:', data);
+
+            if (data && data.traits) {
+                // Update temperature values if present
+                if (data.traits.temperature) {
+                    document.getElementById('tempFromInput').value = data.traits.temperature.min;
+                    document.getElementById('tempToInput').value = data.traits.temperature.max;
+                    document.getElementById('tempFromSlider').value = data.traits.temperature.min;
+                    document.getElementById('tempToSlider').value = data.traits.temperature.max;
+                }
+
+                // Update humidity values if present
+                if (data.traits.humidity) {
+                    document.getElementById('humidityFromInput').value = data.traits.humidity.min;
+                    document.getElementById('humidityToInput').value = data.traits.humidity.max;
+                    document.getElementById('humidityFromSlider').value = data.traits.humidity.min;
+                    document.getElementById('humidityToSlider').value = data.traits.humidity.max;
+                }
+
+                // Update rainfall values if present
+                if (data.traits.rainfall) {
+                    document.getElementById('rainFromInput').value = data.traits.rainfall.min;
+                    document.getElementById('rainToInput').value = data.traits.rainfall.max;
+                    document.getElementById('rainFromSlider').value = data.traits.rainfall.min;
+                    document.getElementById('rainToSlider').value = data.traits.rainfall.max;
+                }
+
+                // Update all slider visuals
+                controlFromSlider(document.getElementById('tempFromSlider'), document.getElementById('tempToSlider'), document.getElementById('tempFromInput'));
+                controlToSlider(document.getElementById('tempFromSlider'), document.getElementById('tempToSlider'), document.getElementById('tempToInput'));
+                controlFromSlider(document.getElementById('humidityFromSlider'), document.getElementById('humidityToSlider'), document.getElementById('humidityFromInput'));
+                controlToSlider(document.getElementById('humidityFromSlider'), document.getElementById('humidityToSlider'), document.getElementById('humidityToInput'));
+                controlFromSlider(document.getElementById('rainFromSlider'), document.getElementById('rainToSlider'), document.getElementById('rainFromInput'));
+                controlToSlider(document.getElementById('rainFromSlider'), document.getElementById('rainToSlider'), document.getElementById('rainToInput'));
+
+                // Show success message
+                responseDiv.textContent = 'Filters updated successfully!';
+                responseDiv.className = 'chatbot-response success';
+
+                // Automatically submit the form to update the results
+                document.querySelector('form').submit();
+            } else {
+                throw new Error('Invalid response format from server');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            responseDiv.textContent = 'Error: ' + error.message;
+            responseDiv.className = 'chatbot-response error';
+            responseDiv.style.display = 'block';
+        }
+    });
+
+    // Excel Export functionality
+    document.getElementById('exportToExcel').addEventListener('click', async function() {
+        try {
+            const response = await fetch('/Index?handler=ExportToExcel', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: JSON.stringify({
+                    TempMin: document.getElementById('tempFromInput').value,
+                    TempMax: document.getElementById('tempToInput').value,
+                    HumidityMin: document.getElementById('humidityFromInput').value,
+                    HumidityMax: document.getElementById('humidityToInput').value,
+                    RainfallMin: document.getElementById('rainFromInput').value,
+                    RainfallMax: document.getElementById('rainToInput').value
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            // Get the filename from the Content-Disposition header if available
+            const contentDisposition = response.headers.get('Content-Disposition');
+            let filename = 'ICRISAT_Data_Export.xlsx';
+            if (contentDisposition) {
+                const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+                if (filenameMatch && filenameMatch[1]) {
+                    filename = filenameMatch[1].replace(/['"]/g, '');
+                }
+            }
+
+            // Convert the response to blob
+            const blob = await response.blob();
+            
+            // Create a temporary link and trigger download
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            a.remove();
+        } catch (error) {
+            console.error('Export error:', error);
+            alert('Failed to export data: ' + error.message);
+        }
+    });
 </script>
